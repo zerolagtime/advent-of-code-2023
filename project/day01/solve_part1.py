@@ -13,4 +13,4 @@ def main(source_file):
     return sum
 
 if __name__ == '__main__':
-    print(main("/home/ctodd/dev/advent-of-code-2023/day01/input.txt"))
+    print(main("project/day01/input.txt"))
