@@ -1,3 +1,5 @@
+# pylint: disable=C0114,C0115,C0116
+
 import logging
 import re
 
@@ -12,7 +14,7 @@ def game_parse(line) -> dict:
     game_total['num'] = int(matches.group(1))
     results = matches.group(2)
     games = results.split(';')
-    logger.debug(f'  {"   -   ".join(games)}')
+    logger.debug('  %s', "   -   ".join(games))
     for game in games:
         grab = [ x.strip() for x in game.split(',')]
         all_colors = {'red': 0, 'blue': 0, 'green': 0}
@@ -24,30 +26,24 @@ def game_parse(line) -> dict:
 
 def is_invalid(stats: dict):
     max_colors = {'red': 12, 'green': 13, 'blue': 14}
-    total_colors = {'red': 0, 'green': 0, 'blue': 0}
-    for round in stats['rounds']:
-        for k, v in round.items():
+    for one_round in stats['rounds']:
+        for k, v in one_round.items():
             if v > max_colors[k]:
                 return True
     return False
-    for color, total in total_colors.items():
-        if max_colors[color] < total:
-            logging.debug(f'Game {stats["num"]} is invalid because there are {total} {color} cubes (max {max_colors[color]})')
-            return True
-    logger.debug(f'Game {stats["num"]} is a valid game')
-    return False
+
 
 def main(source_file):
     answer = 0
-    with open(source_file, "r") as f:
+    with open(source_file, "r", encoding="utf-8") as f:
         for line in f:
             line = line.rstrip("\n")
             stats = game_parse(line)
             if not is_invalid(stats):
-                logger.debug(f'    VAlID: {line}')
+                logger.debug('    ValID: %s', line)
                 answer += stats['num']
             else:
-                logger.debug(f'NOT VALID: {line}')
+                logger.debug('NOT VALID: %s', line)
     return answer
 
 if __name__ == '__main__':
