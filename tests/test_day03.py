@@ -39,7 +39,7 @@ class TestDay03(unittest.TestCase):
         self.assertFalse(grid.has_adjacent_symbol(matches[0].start(), matches[0].end()))
         self.assertTrue(grid.has_adjacent_symbol(matches[1].start(), matches[1].end()))
 
-    def test_day03a_neighbors2(self):
+    def test_day03a_neighbors2a(self):
         grid = solve_part1.Grid()
         grid.extend('...13')
         matches = list(grid.finditer())
@@ -95,6 +95,59 @@ class TestDay03(unittest.TestCase):
             self.assertEqual(solve_part1.main(tf), 4361)
         self.assertEqual(solve_part1.main('project/day03/input.txt'), 533784)
 
+    def test_day03b_neighbors1(self):  # C0114
+        grid = solve_part2.Grid()
+        grid.extend('467...114*.')
+        matches = list(grid.finditer())
+        neighbors = grid.get_adjacent_symbols(matches[1].start(), matches[1].end())
+        self.assertIn(('*', 9), neighbors)
+
+    def test_day03b_neighbors2(self):
+        grid = solve_part2.Grid()
+        grid.extend('...13')
+        grid.extend('..*..')
+        matches = list(grid.finditer())
+        neighbors = grid.get_adjacent_symbols(matches[0].start(), matches[0].end())
+        self.assertIn(('*', 7), neighbors)
+
+    def test_day03b_neighbors3(self):
+        grid = solve_part2.Grid()
+        grid.extend('...13.')
+        grid.extend('.....*')
+        matches = list(grid.finditer())
+        neighbors = grid.get_adjacent_symbols(matches[0].start(), matches[0].end())
+        self.assertIn(('*', 11), neighbors)
+
+    def test_day03b_neighbors4(self):
+        grid = solve_part2.Grid()
+        grid.extend('10*13.')
+        matches = list(grid.finditer())
+        neighbors = grid.get_adjacent_symbols(matches[0].start(), matches[0].end())
+        self.assertIn(('*', 2), neighbors)
+
+    def test_day03b_neighbors5(self):
+        grid = solve_part2.Grid()
+        grid.extend('10#..')
+        matches = list(grid.finditer())
+        neighbors = grid.get_adjacent_symbols(matches[0].start(), matches[0].end())
+        self.assertIn(('#', 2), neighbors)
+
+    def test_day03b_neighbors6(self):
+        grid = solve_part2.Grid()
+        grid.extend('.....*')
+        grid.extend('...13.')
+        matches = list(grid.finditer())
+        neighbors = grid.get_adjacent_symbols(matches[0].start(), matches[0].end())
+        self.assertIn(('*', 5), neighbors)
+
+    def test_day03b_neighbors7(self):
+        grid = solve_part2.Grid()
+        grid.extend('....*')
+        grid.extend('...13')
+        matches = list(grid.finditer())
+        neighbors = grid.get_adjacent_symbols(matches[0].start(), matches[0].end())
+        self.assertIn(('*', 4), neighbors)
+
     def test_day03b(self):
         with TemporaryDirectory() as td:
             tf = os.path.join(td,"temp1")
@@ -132,6 +185,5 @@ class TestDay03(unittest.TestCase):
                         .*.........*
                         1.1..503+.56
                      ''').strip())
-            self.assertEqual(solve_part2.main(tf), 10191)
-        # self.assertEqual(solve_part2.main('project/day02/input.txt'), 54708)
-
+            self.assertEqual(solve_part2.main(tf), 10195)
+        self.assertEqual(solve_part2.main('project/day03/input.txt'), 78826761)

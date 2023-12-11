@@ -29,14 +29,9 @@ class Grid:
         neighbor_pos = []
         # top row - above the grid is ok
         if left_pos >= self.width:
-            if right_border:
-                neighbors += self.symbols[(left_pos - self.width):(right_pos - self.width)]
-                neighbor_pos.extend(list(range((left_pos - self.width),
-                                               (right_pos - self.width) + 1)))
-            else:
-                neighbors += self.symbols[(left_pos - self.width):(right_pos + 1 - self.width)]
-                neighbor_pos.extend(list(range((left_pos - self.width),
-                                               (right_pos + 1 - self.width))))
+            neighbors += self.symbols[(left_pos - self.width):(right_pos + 1 - self.width)]
+            neighbor_pos.extend(list(range((left_pos - self.width),
+                                            (right_pos + 1 - self.width))))
         # left - start of the row is ok
         if start_pos != left_pos:
             neighbors += self.symbols[left_pos]
@@ -53,49 +48,51 @@ class Grid:
         neighbor_tuple_list = [(neighbors[x], neighbor_pos[x]) for x in range(len(neighbors))]
         return neighbor_tuple_list
 
-
-    def _get_previous_gear(self, gear_pos, gear_size):
-        other_gear_size = None
-        for pos, other_gear in self.gear_half_pos:
-            if pos == gear_pos:
-                other_gear_size = other_gear
-        self.gear_half_pos.append((gear_pos, gear_size))
-        return other_gear_size
-
-
-    def get_adjacent_gear(self, start_pos, end_pos):
+    def find_adjacent_gear(self, start_pos, end_pos):
         neighbors = self.get_adjacent_symbols(start_pos, end_pos)
         this_number = int(self.symbols[start_pos:end_pos])
-        adjacent_gear = None
         for symbol,pos in neighbors:
             if symbol == '*':
                 logger.info('  Found gear %d at %d. Adding it to the list.',
                              this_number, pos)
-                adjacent = self._get_previous_gear(pos, this_number)
-                if adjacent and not adjacent_gear:
-                    adjacent_gear = adjacent
-        return adjacent_gear
+                self.gear_half_pos.append((pos, this_number, start_pos))
 
     def finditer(self, pattern=r'\b(\d+)(?!\*)?\b'):
         for match in re.finditer(pattern, self.symbols):
             yield match
 
+    @staticmethod
+    def sort_gears(gear1: tuple, gear2: tuple) -> tuple:
+        if gear1[0] > gear2[0]:
+            return gear2, gear1
+        if gear1[0] == gear2[0] and gear1[1] > gear2[1]:
+            return gear2, gear1
+        if gear1[0] == gear2[0] and gear1[1] == gear2[1] and gear1[2] > gear2[2]:
+            return gear2, gear1
+        return gear1, gear2
+
+    def get_adjacent_gears(self):
+        gear_pairs = set()
+        for half in self.gear_half_pos:
+            for other_half in self.gear_half_pos:
+                if other_half != half and half[0] == other_half[0]:
+                    pair = Grid.sort_gears(half, other_half)
+                    gear_pairs.add(pair)
+        for pair in gear_pairs:
+            yield pair[0][1], pair[1][1]
+
 def main(source_file):
     answer = 0
+    grid = Grid()
     with open(source_file, "r", encoding="utf-8") as f:
-        grid = Grid()
         for line in f:
             line = line.rstrip("\n")
             grid.extend(line)
     for match in grid.finditer(r'\b(\d+)\b'):
-        this_gear_size = int(match.group())
-        other_gear_size = grid.get_adjacent_gear(match.start(), match.end())
-        if other_gear_size:
-            logger.info('Matched gear %d with %d', this_gear_size,
-                         other_gear_size)
-            answer += this_gear_size * other_gear_size
-        else:
-            logger.debug('No match for gear %d.', this_gear_size)
+        grid.find_adjacent_gear(match.start(), match.end())
+    for left, right in grid.get_adjacent_gears():
+        logger.info('Matched gear %d with %d', left, right)
+        answer += left * right
     return answer
 
 if __name__ == '__main__':
