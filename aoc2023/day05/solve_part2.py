@@ -15,4 +15,4 @@ def main(source_file):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    print(main("project/day03/input.txt"))
+    print(main("aoc2023/day05/input.txt"))
