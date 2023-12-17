@@ -6,7 +6,7 @@ from textwrap import dedent
 
 logging.basicConfig(level=logging.DEBUG)
 
-from project.day01 import solve_part1, solve_part2
+from aoc2023.day01 import solve_part1, solve_part2
 
 class TestDay01(unittest.TestCase):
     def test_day01a(self):
@@ -20,7 +20,7 @@ class TestDay01(unittest.TestCase):
                     treb7uchet  
                     ''').strip())
             self.assertEqual(solve_part1.main(tf), 142)
-        self.assertEqual(solve_part1.main('project/day01/input.txt'), 54708)
+        self.assertEqual(solve_part1.main('aoc2023/day01/input.txt'), 54708)
 
 
     def test_day01b(self):
@@ -38,4 +38,4 @@ class TestDay01(unittest.TestCase):
                     7pqrstsixteen
                     ''').strip())
             self.assertEqual(solve_part2.main(tf), 299)
-        self.assertEqual(solve_part2.main('project/day01/input.txt'), 54087)
+        self.assertEqual(solve_part2.main('aoc2023/day01/input.txt'), 54087)

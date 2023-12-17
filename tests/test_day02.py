@@ -6,7 +6,7 @@ from textwrap import dedent
 
 logging.basicConfig(level=logging.DEBUG)
 
-from project.day02 import solve_part1, solve_part2
+from aoc2023.day02 import solve_part1, solve_part2
 
 class TestDay02(unittest.TestCase):
 
@@ -50,7 +50,7 @@ class TestDay02(unittest.TestCase):
                     Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
                     ''').strip())
             self.assertEqual(solve_part1.main(tf), 8)
-        self.assertEqual(solve_part1.main('project/day02/input.txt'), 2149)
+        self.assertEqual(solve_part1.main('aoc2023/day02/input.txt'), 2149)
 
     def test_day02b(self):
         with TemporaryDirectory() as td:

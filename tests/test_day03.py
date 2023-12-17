@@ -6,7 +6,7 @@ import os
 from tempfile import TemporaryDirectory
 from textwrap import dedent
 
-from project.day03 import solve_part1, solve_part2
+from aoc2023.day03 import solve_part1, solve_part2
 
 
 logger = logging.getLogger()
@@ -93,7 +93,7 @@ class TestDay03(unittest.TestCase):
                         .664.598..
                     ''').strip())
             self.assertEqual(solve_part1.main(tf), 4361)
-        self.assertEqual(solve_part1.main('project/day03/input.txt'), 533784)
+        self.assertEqual(solve_part1.main('aoc2023/day03/input.txt'), 533784)
 
     def test_day03b_neighbors1(self):  # C0114
         grid = solve_part2.Grid()
@@ -186,4 +186,4 @@ class TestDay03(unittest.TestCase):
                         1.1..503+.56
                      ''').strip())
             self.assertEqual(solve_part2.main(tf), 10195)
-        self.assertEqual(solve_part2.main('project/day03/input.txt'), 78826761)
+        self.assertEqual(solve_part2.main('aoc2023/day03/input.txt'), 78826761)
